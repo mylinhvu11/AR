@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 180 Final Projects</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+<body>
+
+    <h1 align="middle">CS 180: Intro to Computer Vision and Computational Photography, Fall 2023</h1>
+    <h2 align="middle">Final Projects</h2>
+    <h3 align="middle">Mylinh Vu</h3>
+    
+    <div>
+
+    <h2 align="middle">Poor Man's Augmented Reality</h2>
+
+    <p>In this project, the goal is to produce a fake object onto the real world surface. In order to do so, we select 2d points in relation to the first frame of the video. These 2d points are tracked across the different frames using the tracking techniques. We also keep track of the 3d points in relation to each 2d point. With each point, we use a bounding box for each point to track it and use a Kernelized Coreslation Filter (KCF) tracking algorithm to do so. The tracked points and corresponding 3d points are recorded for each frame and we save the updated points at every frame so we can visualize what gets tracked throughout. Next is implementing the cube and displaying that onto the video. We define the 3d points of where we want the cube and then we use linear least squares to get the camera projection matrix. This converts the given 3d points into 2d points and we do this for each frame so we can see where the cube is at each frmae. The cube is superimposed onto the original video frames and then the output is saved in an output directory. For each set of frames, they can be put together to produce a video to video the cube movement and adjustments with the input video. </p>
+    <!-- INSERT IMPLEMENTATION EXPLANATION -->
+
+    <video controls>
+        <source src="augmented_reality/videos/vans.mp4" type="video/mp4">
+    </video>
+
+    <img src="augmented_reality/videos/vans_points.gif" align="middle"/>
+    <img src="augmented_reality/videos/vans_cube0.gif" align="middle"/>
+    <img src="augmented_reality/videos/vans_cube_points.gif" align="middle"/>
+
+    </div>
+    
+    <h2 align="middle">Gradient Domain Fusion</h2>
+    <p>Part 1 is the toy problem and here i perform image reconstsruction by minimizing the difference between the gradients of the source image and the reconstructed counterpart. This is the error calculated. Here I uses the L-BFGS-B optimization method in order to find the optimal pixel values that can minimize my error, this includes the terms and values for the x-gradients, y-gradients and the top left corner value. Once the image is reconstructed, it is displayed next to the original image and the error is printed. Here the error is quite minized so that the images look the same which is the goal. </p>
+
+    <img src="gradient_domain_fusion/results/output.png" align="middle" width="800"/>
+
+    <p>Part 2 is the Poisson blending where we want to select an object and seamlessly input it into it's background / environment. To start, the user selects points on the object image in order to create a polygon shaped region as a mask for the object. Then the object image is cropped based off of these points and the upper-left corner is selected where it should be placed on teh background image. To solve for the poisson blending, we solve a system of linear equations which we derive from the poisson equation. This uses Laplacians and gradients to produce smoother blending. With the system of linear equations, we use the Ruge-Stuben solver to solve the linear system and it allows more flexibility in sizes of images when trying to apply the poisson blending. Once calculated, the poisson blended image can be produced to illustrate the blended image as well as separately blending the image directly onto the background so it looks like a copy paste. With this, we can see the comparisons of the blending efforts.</p>
+
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/images/img2.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Moon Object</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/images/img1.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Mountains Background</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/results/pasted_moon.png" align="middle" width="400px"/>
+                <figcaption align="middle">Pasted Blending Moon</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/results/poisson_moon.png" align="middle" width="400px"/>
+                <figcaption align="middle">Poisson Blending Moon</figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <div></div>
+
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/images/bear.jpeg" align="middle" width="400px"/>
+                <figcaption align="middle">Bear Object</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/images/pool.jpeg" align="middle" width="400px"/>
+                <figcaption align="middle">Pool Background</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/results/pasted_bear.png" align="middle" width="400px"/>
+                <figcaption align="middle">Pasted Blending Bear</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/results/poisson_bear.png" align="middle" width="400px"/>
+                <figcaption align="middle">Poisson Blending Bear</figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <div></div>
+
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/images/disco.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Disco Object</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/images/kev_myl.JPG" align="middle" width="400px"/>
+                <figcaption align="middle">Kevin and Mylinh Background</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/results/pasted_disco.png" align="middle" width="400px"/>
+                <figcaption align="middle">Pasted Blending Disco Duo</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/results/poisson_disco.png" align="middle" width="400px"/>
+                <figcaption align="middle">Poisson Blending Disco Duo</figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <div></div>
+
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/images/m_and_m.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">M and M People Object</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/images/falls.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Waterfalls Background</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/results/pasted_m.png" align="middle" width="400px"/>
+                <figcaption align="middle">Pasted Blending M and M</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/results/poisson_m.png" align="middle" width="400px"/>
+                <figcaption align="middle">Poisson Blending M and M</figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <div></div>
+
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/images/hsiao.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Hsiao Object</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/images/waffle.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Waffle Background</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="gradient_domain_fusion/results/pasted_hsiao.png" align="middle" width="400px"/>
+                <figcaption align="middle">Pasted Blending Hsiao</figcaption>
+            </td>
+            <td>
+                <img src="gradient_domain_fusion/results/poisson_hsiao.png" align="middle" width="400px"/>
+                <figcaption align="middle">Poisson Blending Hsiao</figcaption>
+            </td>
+        </tr>
+    </table>
+
+    <p>Last couple image blendings didn't work as well as the background colors bleed through and the entire mask wasn't able to determine the complete image from the contrasts and the points given. It does the blending it is required to do, but the objects still don't seem to fit in with the environment, which does have some fault to the images chosen. Overall, since the first 3 pairings have relative relation to the object and the source, these are able to blend more seemlessly since they are more likely to belong together in an image so that the colors also align better with those pairings. The next steps would be making the mask more precise and when blending the values, the background only affects and blends with the outskirts of the image instead of with the image itself here as well. </p>
+
+    </div>
+    <div>
+
+    <h2 align="middle">A Neural Algorithm of Artistic Style</h2>
+
+    <p>The 2015 research paper "A Neural Algorithm of Artistic Style" by Leon A. Gatys, Alexander S. Ecker, and Matthias Bethge introduced a groundbreaking approach in the field of artificial intelligence and computer vision, known as neural style transfer. This technique utilizes convolutional neural networks (CNNs) to extract and blend the content of one image with the style of another, creating entirely new images that combine the original content with a different artistic style. The paper describes how deep neural networks can separate and recombine the content and style of natural images, with the content represented by deep layer feature responses and the style by correlations across multiple layers, captured in a Gram matrix. This process involves an iterative optimization technique, starting with a white noise image and progressively adjusting it to minimize content and style discrepancies with the target images. This seminal work not only opened new avenues in AI art and design but also significantly influenced subsequent research in creative AI and its applications in fields like image editing and graphic design.    </p>
+
+
+    <p>The implementation of the technique presented involves using a convolutional neural network (CNN) to decompose and reassemble the artistic elements of images. The process starts by feeding two images into the network: a content image and a style image. I used a pretrained model, VGG, to process these images through its layers, which capture various levels of image features. The deeper layers capture the content, defined by high-level features, while the style is captured by the correlations of features across various layers, represented by a Gram matrix. An initial image (often white noise) is then iteratively modified through a backpropagation-like process to minimize the differences in content and style features compared to the target images. During this optimization, a loss function, combining both content loss (how much the image differs from the content image) and style loss (how much the image's style differs from the style image), is minimized. This results in the final image that retains the original content but is stylistically similar to the style image, effectively blending the two in a unique piece of AI-generated art.</p>
+
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="neural_style_transfer\inputs\dali_clock.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Persistence of Memory - Salvador Dali (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\final_output\dali_clock_home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Dali & home</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\inputs\home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Home Image (Content)</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="neural_style_transfer\inputs\wave.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Great Wave off Kanagawa - Katsushika Hokusai (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\final_output\wave_home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Hokusai & Home</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\inputs\home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Home Image (Content)</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="neural_style_transfer\inputs\last_supper.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Last Supper - Leonardo da Vinci (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\final_output\last_supper_home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Da Vinci & Home</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\inputs\home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Home Image (Content)</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="neural_style_transfer\inputs\stary_night.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Starry Night - Vincent Van Gogh (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\final_output\stary_night_home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Van Gogh & Home</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\inputs\home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Home Image (Content)</figcaption>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="neural_style_transfer\inputs\pablo_weeping.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Weeping Woman - Pablo Picasso (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\final_output\pablo_weeping_home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Picasso & Home</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\inputs\home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Home Image (Content)</figcaption>
+            </td>
+        </tr>
+
+    </table>
+    <table>
+        <p>Step through the style transfer</p>
+        <tr>
+            <td>
+                <img src="neural_style_transfer\final_output\wave_home.gif" align="middle" width="400px"/>
+                <figcaption align="middle">Hokusai & Home steps</figcaption>
+            </td>
+        </tr>
+    </table>
+    <div></div>
+    <h3>Bells and Whistles</h3>
+
+    <p>For the bells and whistles, I combined 2 differents styles and applied them to my base image. I did this by applying one of the styles to the image then reducing the weight and applying the styling tot he generated mixed styled images</p>
+    <table width="100%">
+        <tr>
+            <td>
+                <img src="neural_style_transfer\inputs\wave.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Great Wave off Kanagawa - Katsushika Hokusai (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\inputs\stary_night.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Starry Night - Vincent Van Gogh (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\final_output\wave_stary_night_home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Hokusai & Van Gogh & Home</figcaption>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <img src="neural_style_transfer\inputs\dali_clock.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Persistence of Memory - Salvador Dali (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\inputs\pablo_weeping.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">The Weeping Woman - Pablo Picasso (Style)</figcaption>
+            </td>
+            <td>
+                <img src="neural_style_transfer\final_output\pablo_weeping_dali_clock_home.jpg" align="middle" width="400px"/>
+                <figcaption align="middle">Dali & Picasso & Home</figcaption>
+            </td>
+        </tr>
+    </table>
+
+   
+</body>
